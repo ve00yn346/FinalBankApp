@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AccountService } from '../services/account.service';
 import { Router } from '@angular/router';
 import { WithdrawRequest } from '../model/withdraw-request';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-withdraw',
   standalone: true,
-  imports: [FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './withdraw.component.html',
   styles: ``
 })
@@ -23,7 +24,12 @@ export class WithdrawComponent {
   ) {}
 
 
-  onSubmit(): void {
+  onSubmit(form: NgForm): void {
+    if (form.invalid) {
+      form.control.markAllAsTouched();
+      return;
+    }
+
     const request: WithdrawRequest = {
       accountId: this.accountId,
       amount: this.amount

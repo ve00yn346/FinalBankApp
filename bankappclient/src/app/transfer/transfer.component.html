@@ -1,22 +1,34 @@
 <section class="panel form-panel">
   <h3 class="page-title">Transfer Funds</h3>
 
-  <form (ngSubmit)="onSubmit()" class="d-grid gap-3">
+  <form #transferForm="ngForm" (ngSubmit)="onSubmit(transferForm)" class="d-grid gap-3" novalidate>
     <div>
       <label class="form-label">From Account Id</label>
-      <input type="number" class="form-control" [(ngModel)]="fromAccountId" name="fromAccountId" required>
+      <input type="number" class="form-control" [(ngModel)]="fromAccountId" name="fromAccountId" #fromAccountIdModel="ngModel" required min="1">
+      <div class="text-danger small mt-1" *ngIf="fromAccountIdModel.invalid && (fromAccountIdModel.touched || transferForm.submitted)">
+        Source account Id is required and must be greater than 0.
+      </div>
     </div>
 
     <div>
       <label class="form-label">To Account Id</label>
-      <input type="number" class="form-control" [(ngModel)]="toAccountId" name="toAccountId" required>
+      <input type="number" class="form-control" [(ngModel)]="toAccountId" name="toAccountId" #toAccountIdModel="ngModel" required min="1">
+      <div class="text-danger small mt-1" *ngIf="toAccountIdModel.invalid && (toAccountIdModel.touched || transferForm.submitted)">
+        Destination account Id is required and must be greater than 0.
+      </div>
+      <div class="text-danger small mt-1" *ngIf="fromAccountId === toAccountId && (transferForm.submitted || toAccountIdModel.touched)">
+        Source and destination accounts must be different.
+      </div>
     </div>
 
     <div>
       <label class="form-label">Amount</label>
-      <input type="number" class="form-control" [(ngModel)]="amount" name="amount" required>
+      <input type="number" class="form-control" [(ngModel)]="amount" name="amount" #amountModel="ngModel" required min="0.01" step="0.01">
+      <div class="text-danger small mt-1" *ngIf="amountModel.invalid && (amountModel.touched || transferForm.submitted)">
+        Amount is required and must be greater than 0.
+      </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit Transfer</button>
+    <button type="submit" class="btn btn-primary" [disabled]="transferForm.invalid || fromAccountId === toAccountId">Submit Transfer</button>
   </form>
 </section>

@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AccountService } from '../services/account.service';
 import { Router } from '@angular/router';
 import { TransferRequest } from '../model/transfer-request';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-transfer',
   standalone: true,
-  imports: [FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './transfer.component.html',
   styles: ``
 })
@@ -23,7 +24,12 @@ export class TransferComponent {
   ) {}
 
 
-  onSubmit(): void {
+  onSubmit(form: NgForm): void {
+    if (form.invalid || this.fromAccountId === this.toAccountId) {
+      form.control.markAllAsTouched();
+      return;
+    }
+
     const request: TransferRequest = {
       fromAccountId: this.fromAccountId,
       toAccountId: this.toAccountId,
@@ -38,11 +44,5 @@ export class TransferComponent {
       }
     }
   });
-  
-    // this.accountService.transfer(request).subscribe(() => {
-    //   this.router.navigate(['/accounts']);
-    // });
-
-
   }
 }

@@ -1,17 +1,23 @@
 <section class="panel form-panel">
   <h3 class="page-title">Deposit Funds</h3>
 
-  <form (ngSubmit)="onSubmit()" class="d-grid gap-3">
+  <form #depositForm="ngForm" (ngSubmit)="onSubmit(depositForm)" class="d-grid gap-3" novalidate>
     <div>
       <label class="form-label">Account Id</label>
-      <input type="number" class="form-control" [(ngModel)]="accountId" name="accountId" required>
+      <input type="number" class="form-control" [(ngModel)]="accountId" name="accountId" #accountIdModel="ngModel" required min="1">
+      <div class="text-danger small mt-1" *ngIf="accountIdModel.invalid && (accountIdModel.touched || depositForm.submitted)">
+        Account Id is required and must be greater than 0.
+      </div>
     </div>
 
     <div>
       <label class="form-label">Amount</label>
-      <input type="number" class="form-control" [(ngModel)]="amount" name="amount" required>
+      <input type="number" class="form-control" [(ngModel)]="amount" name="amount" #amountModel="ngModel" required min="0.01" step="0.01">
+      <div class="text-danger small mt-1" *ngIf="amountModel.invalid && (amountModel.touched || depositForm.submitted)">
+        Amount is required and must be greater than 0.
+      </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit Deposit</button>
+    <button type="submit" class="btn btn-primary" [disabled]="depositForm.invalid">Submit Deposit</button>
   </form>
 </section>
