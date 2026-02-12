@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Account } from '../model/account';
 import { AccountService } from '../services/account.service';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-create-account',
   standalone: true,
-  imports: [FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './create-account.component.html',
   styleUrl: './create-account.component.css'
 })
@@ -18,7 +19,12 @@ export class CreateAccountComponent {
 
   constructor(private accountService: AccountService,private router: Router) {}
 
-  onSubmit(): void {
+  onSubmit(form: NgForm): void {
+    if (form.invalid) {
+      form.control.markAllAsTouched();
+      return;
+    }
+
     this.saveAccount();
   }
 

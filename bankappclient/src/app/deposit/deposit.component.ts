@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AccountService } from '../services/account.service';
 import { Router } from '@angular/router';
 import { DepositRequest } from '../model/deposit-request';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-deposit',
   standalone: true,
-  imports: [FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './deposit.component.html',
   styles: ``
 })
@@ -20,7 +21,12 @@ export class DepositComponent {
     private router: Router
   ) {}
 
-  onSubmit(): void {
+  onSubmit(form: NgForm): void {
+    if (form.invalid) {
+      form.control.markAllAsTouched();
+      return;
+    }
+
     const request: DepositRequest = {
       accountId: this.accountId,
       amount: this.amount
